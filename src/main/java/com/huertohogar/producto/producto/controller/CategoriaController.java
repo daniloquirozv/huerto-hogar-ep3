@@ -1,0 +1,78 @@
+package com.huertohogar.producto.producto.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.huertohogar.producto.producto.model.Categoria;
+import com.huertohogar.producto.producto.service.CategoriaService;
+
+@RestController
+@RequestMapping("api/v1/huertohogar/categoria")
+public class CategoriaController {
+
+    @Autowired
+    private CategoriaService categoriaService;
+
+    @GetMapping
+    public ResponseEntity<List<Categoria>> listarCategorias(){
+        List<Categoria> categorias = categoriaService.findAllCategorias();
+        if(categorias.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(categorias);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Categoria> obtenerCategoriaPorId(@PathVariable Integer id){
+        try {
+            Categoria categoria = categoriaService.findByIdCategoria(id);
+            return ResponseEntity.ok(categoria);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<Categoria> guardarCategoria(@RequestBody Categoria categoria){
+        Categoria nuevaCategoria = categoriaService.saveCategoria(categoria);
+        return ResponseEntity.ok(nuevaCategoria);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Categoria> actualizarCategoria(@PathVariable Integer id, @RequestBody Categoria categoria){
+        try {
+            Categoria cat = categoriaService.findByIdCategoria(id);
+            cat.setIdCategoria(id);
+            cat.setNombreCategoria(categoria.getNombreCategoria());
+            cat.setDescripcionCategoria(categoria.getDescripcionCategoria());
+            categoriaService.saveCategoria(cat);
+            return ResponseEntity.ok(cat);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> eliminarCategoria(@PathVariable Integer id){
+        try {
+            categoriaService.deleteByIdCategoria(id);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+
+
+}
