@@ -12,7 +12,7 @@ import com.huertohogar.producto.producto.model.Producto;
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Integer>{
     
-    @Query("SELECT p FROM Producto p WHERE p.nombre = :nombre")
+    @Query("SELECT p FROM Producto p WHERE p.nombreProducto = :nombre")
     List<Producto> findByNombre(String nombre);
 
     public Producto findByIdProducto(Integer idProducto);
