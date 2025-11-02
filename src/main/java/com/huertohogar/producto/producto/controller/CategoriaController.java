@@ -3,6 +3,7 @@ package com.huertohogar.producto.producto.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,13 +43,13 @@ public class CategoriaController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/guardar")
     public ResponseEntity<Categoria> guardarCategoria(@RequestBody Categoria categoria){
         Categoria nuevaCategoria = categoriaService.saveCategoria(categoria);
-        return ResponseEntity.ok(nuevaCategoria);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaCategoria);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/actualizar")
     public ResponseEntity<Categoria> actualizarCategoria(@PathVariable Integer id, @RequestBody Categoria categoria){
         try {
             Categoria cat = categoriaService.findByIdCategoria(id);
@@ -62,7 +63,7 @@ public class CategoriaController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/eliminar")
     public ResponseEntity<?> eliminarCategoria(@PathVariable Integer id){
         try {
             categoriaService.deleteByIdCategoria(id);
