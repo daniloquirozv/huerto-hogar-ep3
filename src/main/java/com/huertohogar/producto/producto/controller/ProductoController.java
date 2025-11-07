@@ -19,8 +19,16 @@ import com.huertohogar.producto.producto.model.Producto;
 import com.huertohogar.producto.producto.service.CategoriaService;
 import com.huertohogar.producto.producto.service.ProductoService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("api/v1/huertohogar/productos")
+@Tag(name = "Producto", description = "Operaciones relacionadas con los productos")
 public class ProductoController {
 
     @Autowired
@@ -30,6 +38,12 @@ public class ProductoController {
     private CategoriaService categoriaService;
 
     @GetMapping
+    @Operation(summary = "Listar productos", description = "Obtiene una lista de todos los productos disponibles")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Productos listados",
+        content = @Content(mediaType = "application/json",
+        schema = @Schema(implementation = Producto.class))),
+        @ApiResponse(responseCode = "204", description = "Productos vacios")})
     public ResponseEntity<List<Producto>> listarProductos(){
         List<Producto> productos = productoService.findAllProductos();
         if(productos.isEmpty()){
@@ -39,16 +53,28 @@ public class ProductoController {
     }
     
     @GetMapping("/{id}")
+    @Operation(summary = "Obtener producto por ID", description = "Busca y obtiene un producto por su ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Producto encontrado",
+        content = @Content(mediaType = "application/json",
+        schema = @Schema(implementation = Producto.class))),
+        @ApiResponse(responseCode = "404", description = "Producto no encontrado")})
     public ResponseEntity<Producto> buscarPorId(@PathVariable Integer id){
         try{
             Producto producto = productoService.findByIdProducto(id);
             return ResponseEntity.ok(producto);
         }catch (Exception e){
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.notFound().build();
         }
     }
-
+    
     @PostMapping("/guardar")
+    @Operation(summary = "Guardar nuevo producto", description = "Crea y guarda un producto nuevo")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Producto creado",
+        content = @Content(mediaType = "application/json",
+        schema = @Schema(implementation = Producto.class))),        
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")})
     public ResponseEntity<?> guardarProducto (@RequestBody Producto producto){
         try {
             // Validar que la categoría existe
@@ -73,6 +99,13 @@ public class ProductoController {
     }
 
     @PutMapping("/{id}/actualizar")
+    @Operation(summary = "Actualizar producto", description = "Actualiza un producto existente")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Producto actualizado",
+        content = @Content(mediaType = "application/json",
+        schema = @Schema(implementation = Producto.class))),        
+        @ApiResponse(responseCode = "404", description = "Producto no encontrado"),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor")})
     public ResponseEntity<?> actualizarProducto(@PathVariable Integer id, @RequestBody Producto producto){
         try{
             Producto pro = productoService.findByIdProducto(id);
@@ -105,6 +138,10 @@ public class ProductoController {
     }
 
     @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar producto", description = "Elimina un producto por su ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "204", description = "Producto eliminado"),
+        @ApiResponse(responseCode = "404", description = "Producto no encontrado")})
     public ResponseEntity<?> eliminarProducto(@PathVariable Integer id){
         try {
             productoService.deleteByIdProducto(id);
