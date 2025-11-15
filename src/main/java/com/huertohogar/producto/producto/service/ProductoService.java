@@ -1,6 +1,7 @@
 package com.huertohogar.producto.producto.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,15 @@ public class ProductoService {
     private ProductoRepository productoRepository;
 
     public List<Producto> findAllProductos() {
-        return productoRepository.findAll();
+        try {
+            List<Producto> productos = productoRepository.findAll();
+            // Filtrar productos que tengan categoría válida
+            return productos.stream()
+                .filter(p -> p.getIdCategoria() != null)
+                .collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new RuntimeException("Error al obtener productos: " + e.getMessage(), e);
+        }
     }
 
     public Producto findByIdProducto(Integer idProducto) {
@@ -36,7 +45,7 @@ public class ProductoService {
             productoExistente.setPrecioProducto(producto.getPrecioProducto());
             productoExistente.setUnidadProducto(producto.getUnidadProducto());
             productoExistente.setDescripcionProducto(producto.getDescripcionProducto());
-            productoExistente.setImagenProducto(producto.getImagenProducto());
+            productoExistente.setStockProducto(producto.getStockProducto());
             productoExistente.setIdCategoria(producto.getIdCategoria());
             return productoRepository.save(productoExistente);
         }

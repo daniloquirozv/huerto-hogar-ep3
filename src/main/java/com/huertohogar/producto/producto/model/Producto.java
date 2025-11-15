@@ -1,7 +1,10 @@
 package com.huertohogar.producto.producto.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,14 +37,13 @@ public class Producto {
 
     @Column(name = "descripcion", nullable = false)
     private String descripcionProducto;
-
-    @Column(name = "imagen")
-    private String imagenProducto;
-
-    @ManyToOne
-    @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria", nullable = false)
-    private Categoria idCategoria;
     
+    @Column(name = "stock", nullable = false)
+    private int stockProducto;
 
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
+    @JoinColumn(name = "id_categoria", referencedColumnName = "id_categoria", nullable = true)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private Categoria idCategoria;
 
 }

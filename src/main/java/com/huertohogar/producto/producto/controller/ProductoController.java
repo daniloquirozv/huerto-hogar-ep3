@@ -44,12 +44,17 @@ public class ProductoController {
         content = @Content(mediaType = "application/json",
         schema = @Schema(implementation = Producto.class))),
         @ApiResponse(responseCode = "204", description = "Productos vacios")})
-    public ResponseEntity<List<Producto>> listarProductos(){
-        List<Producto> productos = productoService.findAllProductos();
-        if(productos.isEmpty()){
-            return ResponseEntity.noContent().build();
+    public ResponseEntity<?> listarProductos(){
+        try {
+            List<Producto> productos = productoService.findAllProductos();
+            if(productos.isEmpty()){
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.ok(productos);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al listar productos: " + e.getMessage());
         }
-        return ResponseEntity.ok(productos);
     }
     
     @GetMapping("/{id}")
@@ -126,7 +131,7 @@ public class ProductoController {
             pro.setPrecioProducto(producto.getPrecioProducto());
             pro.setUnidadProducto(producto.getUnidadProducto());
             pro.setDescripcionProducto(producto.getDescripcionProducto());
-            pro.setImagenProducto(producto.getImagenProducto());
+            pro.setStockProducto(producto.getStockProducto());;
 
             Producto proActualizado = productoService.saveProducto(pro);
             return ResponseEntity.ok(proActualizado);
