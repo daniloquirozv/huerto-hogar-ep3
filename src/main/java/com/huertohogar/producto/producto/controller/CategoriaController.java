@@ -68,9 +68,14 @@ public class CategoriaController {
         content = @Content(mediaType = "application/json",
         schema = @Schema(implementation = Categoria.class))),        
         @ApiResponse(responseCode = "500", description = "Error interno del servidor")})
-    public ResponseEntity<Categoria> guardarCategoria(@RequestBody Categoria categoria){
-        Categoria nuevaCategoria = categoriaService.saveCategoria(categoria);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaCategoria);
+    public ResponseEntity<?> guardarCategoria(@RequestBody Categoria categoria){
+        try {
+            Categoria nuevaCategoria = categoriaService.saveCategoria(categoria);
+            return ResponseEntity.status(HttpStatus.CREATED).body(nuevaCategoria);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al guardar la categoría: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}/actualizar")

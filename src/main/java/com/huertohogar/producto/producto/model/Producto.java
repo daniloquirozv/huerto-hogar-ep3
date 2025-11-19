@@ -35,7 +35,7 @@ public class Producto {
     @Column(name = "unidad", nullable = false)
     private String unidadProducto;
 
-    @Column(name = "descripcion", nullable = false)
+    @Column(name = "descripcion", nullable = false, length = 500)
     private String descripcionProducto;
     
     @Column(name = "stock", nullable = false)

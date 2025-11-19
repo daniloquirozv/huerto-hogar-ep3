@@ -22,10 +22,10 @@ public class Categoria {
     @Column(name = "id_categoria")
     private int idCategoria;
 
-    @Column(name = "nombre")
+    @Column(name = "nombre", length = 100)
     private String nombreCategoria;
 
-    @Column(name = "descripcion")
+    @Column(name = "descripcion", length = 500)
     private String descripcionCategoria;
 
 }
