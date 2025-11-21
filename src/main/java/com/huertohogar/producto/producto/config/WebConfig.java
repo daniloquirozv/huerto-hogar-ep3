@@ -7,9 +7,10 @@ public class WebConfig implements WebMvcConfigurer{
     @Override
     public void addCorsMappings(org.springframework.web.servlet.config.annotation.CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedOrigins("http://test-app-react-huerto-hogar-ep3.s3-website-us-east-1.amazonaws.com")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowedHeaders("*");
-    }
+    } 
+    
 
 }

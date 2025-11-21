@@ -18,5 +18,4 @@ public class PedidoDto {
     private String observaciones;
     private Integer usuarioIdUsuario;
     private Integer carritoIdCarrito;
-
 }
